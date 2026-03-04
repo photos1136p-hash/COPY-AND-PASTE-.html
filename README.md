@@ -217,9 +217,8 @@ function initThree() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.6;
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ReinhardToneMapping;
+  renderer.toneMappingExposure = 0.8;
 
   clock = new THREE.Clock();
   buildWorld();
@@ -845,9 +844,11 @@ function restartGame() {
   // Clear scene
   while(scene.children.length > 0) scene.remove(scene.children[0]);
   camera.position.set(0, 1.7, 0);
-  camera.add(gunGroup);
-  scene.add(camera);
+  // Rebuild gun fresh
+  gunGroup = new THREE.Group();
+  buildGun();
   buildWorld();
+  clock.getDelta(); // flush delta
   gameRunning = true;
   requestLock();
   startWave(1);
